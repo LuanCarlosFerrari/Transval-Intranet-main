@@ -120,9 +120,9 @@ export function initDownloadsSection(selectedCategory = null) {
     }
 
     return `
-        <div class="downloads-container">
+        <div class="titulo-container">
             <div class="titulo-container">
-                <h2>Arquivos para Download</h2>
+                <h2>Treinamentos e políticas</h2>
             </div>
             <table class="downloads-table" width="100%">
                 <tbody>
