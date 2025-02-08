@@ -30,6 +30,44 @@ export function initDownloadsSection(selectedCategory = null) {
 
     // If a category is selected, show its contents
     if (selectedCategory) {
+        const files = selectedCategory.downloads;
+        const rows = [];
+
+        // Create rows with 2 columns
+        for (let i = 0; i < files.length; i += 2) {
+            const file1 = files[i];
+            const file2 = files[i + 1];
+
+            rows.push(`
+                <tr>
+                    <td>
+                        <div class="download-item">
+                            <i class="fas ${file1.icon}"></i>
+                            <h3>${file1.name}</h3>
+                            ${file1.info ? `<p>${file1.info}</p>` : ''}
+                            <a href="${file1.path}" 
+                               download 
+                               class="download-button"
+                               data-filetype="pdf">Baixar PDF</a>
+                        </div>
+                    </td>
+                    ${file2 ? `
+                    <td>
+                        <div class="download-item">
+                            <i class="fas ${file2.icon}"></i>
+                            <h3>${file2.name}</h3>
+                            ${file2.info ? `<p>${file2.info}</p>` : ''}
+                            <a href="${file2.path}" 
+                               download 
+                               class="download-button"
+                               data-filetype="pdf">Baixar PDF</a>
+                        </div>
+                    </td>
+                    ` : '<td></td>'}
+                </tr>
+            `);
+        }
+
         return `
             <div class="downloads-container">
                 <div class="titulo-container">
@@ -38,54 +76,59 @@ export function initDownloadsSection(selectedCategory = null) {
                     </button>
                     <h2>${selectedCategory.title}</h2>
                 </div>
-                <div class="downloads-grid">
-                    ${selectedCategory.downloads.map(file => `
-                        <div class="download-item">
-                            <i class="fas ${file.icon}"></i>
-                            <h3>${file.name}</h3>
-                            ${file.info ? `<p>${file.info}</p>` : ''}
-                            <a href="${file.path}" 
-                               download 
-                               class="download-button"
-                               data-filetype="pdf">Baixar PDF</a>
-                        </div>
-                    `).join('')}
-                </div>
+                <table class="downloads-table" width="100%">
+                    <tbody>
+                        ${rows.join('')}
+                    </tbody>
+                </table>
             </div>
         `;
     }
 
-    // Show main view with all categories
+    // Show main view with all categories in pairs
+    const rows = [];
+    for (let i = 0; i < downloadsData.length; i += 2) {
+        const category1 = downloadsData[i];
+        const category2 = downloadsData[i + 1];
+
+        rows.push(`
+            <tr>
+                <td>
+                    <div class="department-group">
+                        <h3 class="department-title">${category1.title}</h3>
+                        <div class="download-item folder">
+                            <i class="fas fa-folder"></i>
+                            <h3>${category1.title}</h3>
+                            <button class="folder-button" data-category="${category1.title}">Abrir Pasta</button>
+                        </div>
+                    </div>
+                </td>
+                ${category2 ? `
+                <td>
+                    <div class="department-group">
+                        <h3 class="department-title">${category2.title}</h3>
+                        <div class="download-item folder">
+                            <i class="fas fa-folder"></i>
+                            <h3>${category2.title}</h3>
+                            <button class="folder-button" data-category="${category2.title}">Abrir Pasta</button>
+                        </div>
+                    </div>
+                </td>
+                ` : '<td></td>'}
+            </tr>
+        `);
+    }
+
     return `
         <div class="downloads-container">
             <div class="titulo-container">
                 <h2>Arquivos para Download</h2>
             </div>
-            ${downloadsData.map(category => `
-                <div class="department-group">
-                    <h3 class="department-title">${category.title}</h3>
-                    <div class="downloads-grid">
-                        ${category.downloads.length > 0 ?
-            category.downloads.map(file => `
-                                <div class="download-item">
-                                    <i class="fas ${file.icon}"></i>
-                                    <h3>${file.name}</h3>
-                                    ${file.info ? `<p>${file.info}</p>` : ''}
-                                    <a href="${file.path}" 
-                                       download 
-                                       class="download-button"
-                                       data-filetype="pdf">Baixar PDF</a>
-                                </div>
-                            `).join('') :
-            `<div class="download-item folder">
-                                <i class="fas fa-folder"></i>
-                                <h3>${category.title}</h3>
-                                <button class="folder-button" data-category="${category.title}">Abrir Pasta</button>
-                            </div>`
-        }
-                    </div>
-                </div>
-            `).join('')}
+            <table class="downloads-table" width="100%">
+                <tbody>
+                    ${rows.join('')}
+                </tbody>
+            </table>
         </div>
     `;
 }
